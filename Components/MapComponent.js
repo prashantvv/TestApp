@@ -106,18 +106,6 @@ class MapComponent extends Component {
   </MapView>
 
 
-{/* <MapView
-  region={this.state.region}
-  onRegionChange={this.onRegionChange}
->
-  {this.state.markers.map(marker => (
-    <Marker
-      coordinate={marker.latlng}
-      title={marker.title}
-      description={marker.description}
-    />
-  ))}
-</MapView> */}
         </View>
       );
   }

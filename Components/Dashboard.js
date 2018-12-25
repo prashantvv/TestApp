@@ -1,19 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList ,Alert,
-  ActivityIndicator,
-  SafeAreaView,TextInput,Platform ,StatusBar ,TouchableOpacity} from 'react-native';
+  ActivityIndicator, SafeAreaView,TextInput,
+  Platform ,StatusBar ,TouchableOpacity} from 'react-native';
 import { List, ListItem } from "react-native-elements";
-// import Icon from 'react-native-vector-icons/FontAwesome';
-// const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
 import Icon from "react-native-vector-icons/Ionicons";
 import MapComponent from './MapComponent';
+
+CONSTANTS = require('../CONSTANTS');
 
 <Icon
   name={Platform.OS === "ios" ? "ios-add" : "md-add"}
   color="#ccc"
   size={25}
 />
+
+
 export default class Dashboard extends React.Component {
 
 constructor(props) {
@@ -36,12 +38,12 @@ constructor(props) {
     this.makeRemoteRequest();
   }
 
+
+  //API call
   makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `http://www.mocky.io/v2/5a6ed02b30000078116fe334`;
 
     this.setState({ loading: true });
-    fetch(url) 
+    fetch(CONSTANTS.API_URL) 
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -61,6 +63,7 @@ constructor(props) {
   };
 
 
+  //searchfunc()
   searchFilterFunction = text => {    
     const newData = this.state.data.filter(item => {      
       const itemData = `${item.city}   
@@ -74,93 +77,65 @@ constructor(props) {
 
 
 
+  //view
   render() {
     return (
 
       <View style={[flex=1,width='100%']}>
-     
       <View style={[flex=1,width='100%',paddingLeft= 20,paddingRight=20 ,]}>
-     
-
-<View style={{marginTop:20,padding:20,backgroundColor:'white'}}>
-               
-
-
-  
+        <View style={{marginTop:20,padding:20,backgroundColor:'white'}}>
                {  this.state.showsrchbox &&   
-                
-                <View style={{flexDirection: 'row', justifyContent: 'space-between',marginBottom:-20}}>
-               
-
-         
-               <TextInput
-                 placeholder="Search"
-
-                style={{   paddingLeft:10,paddingRight:10,height: 30, borderColor: 'gray', borderWidth: 1, width:'80%', borderRadius:10}}
-                 onChangeText={(text) => this.searchFilterFunction(text)}
-                // value={this.state.text}
-              />
-               
-             
-              <Text style={{textAlignVertical:'center',}}   onPress={() => {
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between',marginBottom:-20}}>
+                   <TextInput
+                    placeholder="Search"
+                    style={{   paddingLeft:10,paddingRight:10,height: 30, borderColor: 'gray', borderWidth: 1, width:'80%', borderRadius:10}}
+                    onChangeText={(text) => this.searchFilterFunction(text)}
+                    // value={this.state.text}
+                  />
+                       <Text style={{textAlignVertical:'center',}}   onPress={() => {
                                   this.setState({ showsrchbox:false}, () => { this.makeRemoteRequest(); });
                                   }}>Cancel</Text>
-           
-               </View>
-                  }
-               
-
-
-
-               
-               { !this.state.showsrchbox &&    <View style={{flexDirection: 'row', justifyContent: 'space-between',marginBottom:-20}}>
-               
-
-              <TouchableOpacity    onPress={() => {
-                                   this.setState({showsrchbox:true})
-                                  }} >
-                        <Icon
-            name={ "md-search"}
-            color="#ccc"
-            size={30}
-          />
-          </TouchableOpacity>
-               <Text style={{alignSelf:'center'}}>LOCATIONS</Text>
-               
-               <Text  style={{alignSelf:'center'}}
-               onPress={() => {
-                                   this.setState({showmap:!this.state.showmap})
-                                  }} >{ this.state.showmap ? 'ListView':'MapView' }</Text>
-        
-               
-               </View>
-                  }
-            
-
-               {/* <View style={{height:0.5,backgroundColor:'black',marginTop:10}}></View> */}
-
-               </View>
-               
-              {
+                  </View>
                 
-                this.state.showmap && <View style={{marginTop:20}}>
+                }
+             
+               { !this.state.showsrchbox &&    
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between',marginBottom:-20}}>
+               
 
+                          <TouchableOpacity    onPress={() => {
+                                              this.setState({showsrchbox:true})
+                                              }} >
+                                           <Icon
+                                            name={ "md-search"}
+                                            color="#ccc"
+                                            size={30}
+                                          />
+                            </TouchableOpacity>
+                                <Text style={{alignSelf:'center'}}>LOCATIONS</Text>
+                                
+                                <Text  style={{alignSelf:'center'}}
+                                onPress={() => {
+                                           this.setState({showmap:!this.state.showmap})
+                                         }} >{ this.state.showmap ? 'ListView':'MapView' }</Text>
+                          </View>
+                  }
+              
+               </View>
+           
+              {
+                this.state.showmap && <View style={{marginTop:20}}>
                         <MapComponent></MapComponent>
                 </View>
-
               }
 
-               
              { !this.state.showmap && <List  style={{backgroundColor:"grey",marginTop:-30}}>
                     <FlatList 
-                    
                     keyExtractor={(item, index) => item.post_code}
                       data={this.state.data}
                       renderItem={({item}) => 
-                      
                       <View style={styles.view}>
                           <Text style={{ fontSize: 20}}>{item.city}, {item.country}</Text>
-
                           <View style={{
                               flex: 1,
                               flexDirection: 'row',
@@ -182,30 +157,13 @@ constructor(props) {
                             <Text style={styles.txt_border} >WiFi</Text>
                             <Text style={[styles.txt_border,{marginLeft:20}]} >PARKING</Text>
                             <Text style={[styles.txt_border,{marginLeft:20}]} >CHARGER</Text>
-                         
                             </View>
-                           
-
                           </View>
                           <View style={{height:0.5,backgroundColor:'black',marginTop:10}}></View>
-
-                        
-
                       </View>
                   }
 
-                      // renderItem={({ item }) => (
-                      //   <ListItem
-                      //   style={[styles.container,{backgroundColor:"#0000ff"}]}
-                      //     // title={`${item.name.first} ${item.name.last}`}
-                      //     title={`${item.city}  ${item.country}`}
-                      
-                          
-                      //   />
-                      // )
-                    // }
                     />
-                    
                     </List> }
 
                    
